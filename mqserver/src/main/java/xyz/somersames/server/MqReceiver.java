@@ -44,8 +44,17 @@ public class MqReceiver {
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                 String str = new String(body);
                 System.out.println(str);
+                if("测试".equals(str)){
+                    channel.basicReject(envelope.getDeliveryTag(),false);
+                }else{
+                    channel.basicAck(envelope.getDeliveryTag(),false);
+                }
             }
         };
-        channel.basicConsume(queueName, true, defaultConsumer);
+//        GetResponse response = channel.basicGet(queueName,true);
+//        Long tag = response.getEnvelope().getDeliveryTag();
+////        channel.basicAck(tag,true);
+////        channel.basicReject(tag,false);
+        channel.basicConsume(queueName,defaultConsumer);
     }
 }
